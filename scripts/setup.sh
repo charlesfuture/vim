@@ -9,9 +9,9 @@ else
 fi
 
 if `echo $OS | grep -q -E 'ubuntu|debian'`; then
-    cmd=apt-get install ncurses-dev python-dev lua5.1 liblua5.1-dev ctags cmake build-essential 
+    cmd="apt-get install ncurses-dev python-dev lua5.1 liblua5.1-dev ctags cmake build-essential"
 elif `echo $OS | grep -q -E 'centos|fedora'`; then
-    cmd=yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++
+    cmd="yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++"
 else
     echo 'please install python python-dev lua lua-dev mannually!'
     exit 1
@@ -31,7 +31,7 @@ else
     $cmd -y
 fi
 
-./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-perlinterp --enable-rubyinterp --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr
+./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr
 make -j10
 
 if [ $(id -u) != "0" ];then
