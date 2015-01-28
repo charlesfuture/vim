@@ -27,13 +27,15 @@ Plugin 'vim-scripts/xptemplate'
 Plugin 'vim-scripts/nginx.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'Shougo/neocomplete.vim'
+Plugin 'ervandew/supertab'
 "Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'yonchu/accelerated-smooth-scroll'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'terryma/vim-multiple-cursors'
-
+Plugin 'dkprice/vim-easygrep'
+Plugin 'mbbill/fencview'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -48,11 +50,11 @@ filetype plugin indent on    " required
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 显示相关
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set shortmess=atI                            " 启动的时候不显示那个援助乌干达儿童的提示
+"set shortmess=atI                            " 启动的时候不显示那个援助乌干达儿童的提示
 "winpos 5 5                                   " 设定窗口位置
 "set lines=40 columns=155                     " 设定窗口大小
-set nu                                       " 显示行号
-set ruler                                    " 显示标尺
+"set nu                                       " 显示行号
+"set ruler                                    " 显示标尺
 "set cmdheight=1                              " 命令行（在状态行下）的高度，设置为1
 "set whichwrap+=<,>,h,l                       " 允许backspace和光标键跨越行边界(不建议)
 "set scrolloff=3                              " 光标移动到buffer的顶部和底部时保持3行距离
@@ -130,12 +132,12 @@ au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|
 
 
 " 设置编码
-set langmenu=zh_CN.UTF-8
-set helplang=cn
-set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
-set termencoding=utf-8
-set encoding=utf-8
-set fileencoding=utf-8
+"set langmenu=zh_CN.UTF-8
+"set helplang=cn
+"set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+"set termencoding=utf-8
+"set encoding=utf-8
+"set fileencoding=utf-8
 
 
 " 显示中文帮助
@@ -145,7 +147,7 @@ if version >= 603
 endif
 
 " 设置配色方案
-colorscheme 256-jungle
+colorscheme 256-grayvim
 if (has("gui_running"))
    set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
 endif
@@ -629,3 +631,9 @@ let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 " Gist
 let g:gist_post_private = 1
 let g:gist_open_browser_after_post = 1   " 创建后直接打开浏览器查看
+
+" superTab 
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" fencview
+let g:fencview_autodetect = 1

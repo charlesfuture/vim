@@ -50,7 +50,7 @@ YouCompleteMe   补全插件
     git submodule update --init --recursive
     ./install.sh --clang-completer
 
-neocomplete     只能补全插件
+neocomplete     补全插件
     
     apt-get install ncurses-dev python-dev lua5.1 liblua5.1-dev -y
     需要vim添加lua支持
@@ -83,44 +83,4 @@ SingleCompile
 
 [Vim编程——配置与技巧](http://linux-wiki.cn/wiki/%E7%94%A8Vim%E7%BC%96%E7%A8%8B%E2%80%94%E2%80%94%E9%85%8D%E7%BD%AE%E4%B8%8E%E6%8A%80%E5%B7%A7)
 
-**插件列表**
 
-    [submodule "bundle/pathogen"]
-    	path = bundle/pathogen
-    	url = git://github.com/tpope/vim-pathogen.git
-    [submodule "bundle/python-mode"]
-    	path = bundle/python-mode
-    	url = git://github.com/klen/python-mode.git
-    [submodule "bundle/tagbar"]
-    	path = bundle/tagbar
-    	url = git://github.com/majutsushi/tagbar
-    [submodule "bundle/emmet"]
-    	path = bundle/emmet
-    	url = git://github.com/mattn/emmet-vim.git
-    [submodule "bundle/nerdtree"]
-    	path = bundle/nerdtree
-    	url = git://github.com/scrooloose/nerdtree.git
-    [submodule "bundle/less"]
-    	path = bundle/less
-    	url = git://github.com/groenewege/vim-less
-    [submodule "bundle/markdown"]
-    	path = bundle/markdown
-    	url = git://github.com/plasticboy/vim-markdown.git
-    [submodule "bundle/syntastic"]
-    	path = bundle/syntastic
-    	url = git://github.com/scrooloose/syntastic.git
-    [submodule "bundle/YouCompleteMe"]
-    	path = bundle/YouCompleteMe
-    	url = git://github.com/Valloric/YouCompleteMe
-    [submodule "bundle/pydiction"]
-    	path = bundle/pydiction
-    	url = git://github.com/rkulla/pydiction
-    [submodule "bundle/powerline"]
-    	path = bundle/powerline
-    	url = git://github.com/Lokaltog/vim-powerline
-    [submodule "bundle/xptemplate"]
-    	path = bundle/xptemplate
-    	url = git://github.com/vim-scripts/xptemplate
-    [submodule "bundle/nginx"]
-    	path = bundle/nginx
-        url = git://github.com/vim-scripts/nginx.vim
