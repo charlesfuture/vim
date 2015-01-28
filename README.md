@@ -21,7 +21,7 @@
 
     #或者直接使用下面的命令
 
-    wget -qO-  https://raw.github.com/zkdfbb/vim/master/scripts/setup.sh | sh
+    wget -qO- https://git.ustclug.org/zhangkai/vim/raw/master/scripts/setup.sh | sh
 
 **submodule初始化**
 
