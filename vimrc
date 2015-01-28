@@ -28,6 +28,7 @@ Plugin 'vim-scripts/nginx.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'Shougo/neocomplete.vim'
 "Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'flazz/vim-colorschemes'
 
 
 call vundle#end()            " required
@@ -140,10 +141,10 @@ if version >= 603
 endif
 
 " 设置配色方案
-"colorscheme murphy
-"if (has("gui_running"))
-"   set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
-"endif
+colorscheme 256-jungle
+if (has("gui_running"))
+   set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
+endif
 
 syntax on                                              " 语法高亮
 filetype on                                            " 侦测文件类型
