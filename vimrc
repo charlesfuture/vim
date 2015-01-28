@@ -29,6 +29,10 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'Shougo/neocomplete.vim'
 "Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'yonchu/accelerated-smooth-scroll'
+Plugin 'mattn/webapi-vim'
+Plugin 'mattn/gist-vim'
+Plugin 'terryma/vim-multiple-cursors'
 
 
 call vundle#end()            " required
@@ -255,7 +259,7 @@ func SetTitle()
 
     elseif &filetype == 'sh'
         call append(0, "\#!/usr/bin/env bash")
-        call append(1, "\## -*- coding:utf-8 -*-")
+        call append(1, "\# -*- coding:utf-8 -*-")
         call append(3, "")
 
     elseif &filetype == 'cpp'
@@ -622,3 +626,6 @@ endif
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
+" Gist
+let g:gist_post_private = 1
+let g:gist_open_browser_after_post = 1   " 创建后直接打开浏览器查看
