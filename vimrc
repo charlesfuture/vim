@@ -1,19 +1,53 @@
-runtime bundle/pathogen/autoload/pathogen.vim
+" runtime bundle/pathogen/autoload/pathogen.vim
 " 禁用插件
-let g:pathogen_disabled = ['syntastic']
-"if v:version < '703584'
-"        call add(g:pathogen_disabled, 'pydiction')
-"endif
-call pathogen#infect()
+" let g:pathogen_disabled = ['syntastic']
+" if v:version < '703584'
+"    call add(g:pathogen_disabled, 'pydiction')
+" endif
+" call pathogen#infect()
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+"Plugin 'tpope/vim-pathogen'
+Plugin 'gmarik/Vundle.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'mattn/emmet-vim' 
+Plugin 'scrooloose/nerdtree'
+Plugin 'groenewege/vim-less'
+Plugin 'plasticboy/vim-markdown'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'klen/python-mode'
+Plugin 'rkulla/pydiction'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'vim-scripts/xptemplate'
+Plugin 'vim-scripts/nginx.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'Shougo/neocomplete.vim'
+"Plugin 'nathanaelkane/vim-indent-guides'
+
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 显示相关
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set shortmess=atI                            " 启动的时候不显示那个援助乌干达儿童的提示
+set shortmess=atI                            " 启动的时候不显示那个援助乌干达儿童的提示
 "winpos 5 5                                   " 设定窗口位置
 "set lines=40 columns=155                     " 设定窗口大小
-"set nu                                       " 显示行号
-"set ruler                                    " 显示标尺
+set nu                                       " 显示行号
+set ruler                                    " 显示标尺
 "set cmdheight=1                              " 命令行（在状态行下）的高度，设置为1
 "set whichwrap+=<,>,h,l                       " 允许backspace和光标键跨越行边界(不建议)
 "set scrolloff=3                              " 光标移动到buffer的顶部和底部时保持3行距离
@@ -22,10 +56,10 @@ call pathogen#infect()
 "set go=                                      " 不要图形按钮
 "color asmanian2                              " 设置背景主题
 "set background=dark                          " 背景使用黑色
-":set makeprg=g++\ --std=c++11\ -Wall\ \ %                 " make运行,有makefile直接输入:make
-:set makeprg=g++\ -o\ %<\ %\ --std=c++11\ -Wall\ -g        " make运行,有makefile直接输入:make
 "autocmd InsertLeave * se nocul               " 用浅色高亮当前行
 "autocmd InsertEnter * se cul                 " 用浅色高亮当前行
+":set makeprg=g++\ --std=c++11\ -Wall\ \ %                 " make运行,有makefile直接输入:make
+:set makeprg=g++\ -o\ %<\ %\ --std=c++11\ -Wall\ -g        " make运行,有makefile直接输入:make
 
 "set foldmethod=indent                        " 折叠方式
 set foldcolumn=0                              " 折叠栏宽度,为0时表示没有折叠栏
@@ -493,5 +527,97 @@ let g:ycm_seed_identifiers_with_syntax=1
 " 修改对C函数的补全快捷键，默认是CTRL + space，修改为ALT + ;
 let g:ycm_key_invoke_completion = '<M-;>'
 " 设置转到定义处的快捷键为ALT + G，这个功能非常赞
-nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+""nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
+
+nnoremap <C-\> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+
+" vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
+
+
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+
+" For cursor moving in insert mode(Not recommended)
+"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
+"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
+"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
+"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
+" Or set this.
+"let g:neocomplete#enable_cursor_hold_i = 1
+" Or set this.
+"let g:neocomplete#enable_insert_char_pre = 1
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
