@@ -4,7 +4,7 @@
 
     #部署
     rm -rf ~/.vim ~/.vimrc
-    git clone git@git.ustclug.org:zhangkai/vim.git ~/.vim
+    git clone https://git.ustclug.org/zhangkai/vim.git ~/.vim
 
     #首先安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
     #wget ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2
@@ -21,7 +21,7 @@
 
     #或者直接使用下面的命令
 
-    wget -qO- https://git.ustclug.org/zhangkai/vim/raw/master/scripts/setup.sh | sh
+    wget -qO- https://git.ustclug.org/zhangkai/vim/raw/master/scripts/setup.sh --no-check-certificate | sh
 
 **submodule初始化**
 

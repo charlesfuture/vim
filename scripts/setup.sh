@@ -18,7 +18,7 @@ else
 fi
 
 rm -rf ~/.vim  ~/.vimrc
-git clone git@git.ustclug.org:zhangkai/vim.git ~/.vim
+git clone https://git.ustclug.org/zhangkai/vim.git ~/.vim
 git branch --set-upstream-to=origin/master master
 
 cd ~/.vim/scripts
