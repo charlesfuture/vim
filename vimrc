@@ -28,7 +28,7 @@ Plugin 'vim-scripts/nginx.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'ervandew/supertab'
-"Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'yonchu/accelerated-smooth-scroll'
 Plugin 'mattn/webapi-vim'
@@ -36,6 +36,8 @@ Plugin 'mattn/gist-vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'mbbill/fencview'
+Plugin 'fholgado/minibufexpl.vim'
+
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -126,9 +128,9 @@ set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strf
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
 " 可以在buffer的任何地方使用鼠标(使用taglist鼠标定位时需打开)
-"set mouse=a
-"set selection=exclusive
-"set selectmode=mouse,key
+""set mouse=a
+""set selection=exclusive
+""set selectmode=mouse,key
 
 
 " 设置编码
@@ -147,7 +149,7 @@ if version >= 603
 endif
 
 " 设置配色方案
-colorscheme 256-grayvim
+colorscheme molokai
 if (has("gui_running"))
    set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
 endif
@@ -228,27 +230,83 @@ autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mk
 "注释掉nginx/plugin中的setlocal iskeyword+=:,否则python文件数字后跟冒号会出现红色着重号
 autocmd BufRead,BufNewFile /etc/nginx/conf.d/* set ft=nginx
 
-""定义函数SetTitle，自动插入文件头
-autocmd BufNewFile *.[ch],*.cpp,*.sh,*.java,*.py,*.php,*.html,*.css,*.less exec ":call SetTitle()"
+"进行版权声明的设置
+"添加或更新头
+function AddTitle()
+
+    if &filetype == 'python' || &filetype == 'sh'
+        call append(2, "\##############################################")
+        call append(3, "\#")
+        call append(4, "\#  Author: zhangkai")
+        call append(5, "\#  Mail: zhangkaicpu@ict.ac.cn")
+        call append(6, "\#  Filename: ".expand("%"))
+        call append(7, "\#  Last modified: ".strftime("%Y-%m-%d %H:%M"))
+        call append(8, "\#")
+        call append(9, "\##############################################")
+    else
+        call append(0, "/**********************************************")
+        call append(1, "*")
+        call append(2, "*  Author: zhangkai")
+        call append(3, "*  Mail: zhangkaiict@ict.ac.cn ")
+        call append(4, "*  Filename: ".expand("%"))
+        call append(5, "*  Last modified: ".strftime("%Y-%m-%d %H:%M"))
+        call append(6, "*")
+        call append(7, "***********************************************/")
+        call append(8, "")
+    endif
+    echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
+endfunction
+
+"更新最近修改时间和文件名
+function UpdateTitle()
+    normal m'
+    execute '/Last modified:/s@:.*$@\=strftime(": %Y-%m-%d %H:%M")@'
+    normal ''
+    normal mk
+    execute '/Filename:/s@:.*$@\=": ".expand("%:t")@'
+    execute "noh"
+    normal 'k
+    echohl WarningMsg | echo "Successful in updating the copy right." | echohl None
+endfunction
+
+"判断前10行代码里面，是否有Last modified这个单词，
+"如果没有的话，代表没有添加过作者信息，需要新添加；
+"如果有的话，那么只需要更新即可
+function TitleDet()
+    let n=1
+    "默认为添加
+    while n < 10
+        let line = getline(n)
+        if line =~ '^.*Last\smodified:\S*.*$'
+            call UpdateTitle()
+            return
+        endif
+        let n = n + 1
+    endwhile
+    call AddTitle()
+endfunction
+
+autocmd BufNewfile *.h exec ":call Bar()"
+function! Bar()
+python << EOF
+import vim
+buf = vim.current.buffer
+vim.command('let title=expand("%:r")')
+name = vim.eval("title")
+name = "_" + name.upper() + "_H"
+print "Lines: {0}".format(len(buf))
+vim.command('call append(0, "#ifndef %s")'%name)
+vim.command('call append(1, "#define %s")'%name)
+buf.append("\n")
+buf.append("#endif")
+
+EOF
+endfunction
+
+
+"定义函数SetTitle，自动插入文件头
+autocmd BufNewFile *.[c],*.cpp,*.sh,*.java,*.py,*.php,*.html,*.css,*.less exec ":call SetTitle()"
 func SetTitle()
-"    if &filetype == 'python' || &filetype == 'sh'
-"        call setline(1,"\#########################################################################")
-"        call append(line("."),   "\# File Name: ".expand("%"))
-"        call append(line(".")+1, "\# Author: zhangkai")
-"        call append(line(".")+2, "\# Mail: zhangkaicpu@ict.ac.cn")
-"        call append(line(".")+3, "\# Created Time: ".strftime("%c"))
-"        call append(line(".")+4, "\#########################################################################")
-"        call append(line(".")+5, "")
-"    else
-"        call setline(1, "/*************************************************************************")
-"        call append(line("."),   "  File Name: ".expand("%"))
-"        call append(line(".")+1, "  Author: zhangkai")
-"        call append(line(".")+2, "  Mail: zhangkaiict@ict.ac.cn ")
-"        call append(line(".")+3, "  Created Time: ".strftime("%c"))
-"        call append(line(".")+4, " ************************************************************************/")
-"        call append(line(".")+5, "")
-"    endif
-"
 
     if &filetype == 'python'
         call append(0, "\#!/usr/bin/env python")
@@ -359,12 +417,20 @@ nmap <C-l> :PymodeLint<CR>
 nmap <C-m> :PymodeLintAuto<CR>
 nmap <C-k> :setlocal textwidth=500<CR>
 
-" F1-F12按键映射,F1:帮助,F2:切换窗口,F3:去行尾空格,F4:去空行
-" F5:编译运行,F6:调试运行,F7:粘贴模式
-" F8:打开/关闭NERDRree,F9:打开/关闭Taglist,F10:跳到下一个buffer
-" F12:用indent自动缩进全文,gg是跳到开头,G是跳到末尾
+" F1:帮助(默认)
+" F2:切换窗口
+" F3:去行尾空格(普通模式)
+" F4:去空行(普通模式)
+" F5:编译运行
+" F6:调试运行
+" F7:粘贴模式
+" F8:打开/关闭NERDRree
+" F9:打开/关闭Tagbar
+" F10:Python代码格式化
+" F11:最大化(默认)
+" F12:自动插入文件头部声明
 
-map <F2> <C-w>w
+noremap <F2> <C-w>w
 nnoremap <F3> :%s/\s\+$//g<CR>
 nnoremap <F4> :%s/^\n\+$//g<CR>
 map <F5> :SCCompileRun<CR>
@@ -372,8 +438,11 @@ map <F6> :call Debug()<CR>
 map <F7> :set paste<CR>i
 map <silent> <F8> :NERDTreeToggle<CR>
 map <silent> <F9> :TagbarToggle<cr>
-map <silent> <F10> :bn<cr>
-map <F12> gg=G
+"map <silent> <F9> :TlistToggle<cr>
+"map <silent> <F10> :bn<cr>
+map <silent> <F10> :PymodeLintAuto<cr>
+map <F12> :call TitleDet()<cr>'s
+
 nnoremap <C-F2> :vert diffsplit
 
 func! CompileRun()
@@ -420,9 +489,8 @@ endfunc
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" CTags,安装Taglist插件,鼠标点击需set mouse=a,使用ctrl+ww切换窗口,使用+-切换折叠
+" taglist 使用+-切换折叠
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 绑定F9为打开/关闭TagList窗口
 let Tlist_Sort_Type = "name"                                  " 按照名称排序
 let Tlist_Compart_Format = 1                                  " 压缩方式
 let Tlist_Exist_OnlyWindow = 1                                " 如果只有一个buffer，kill窗口也kill掉buffer
@@ -442,46 +510,49 @@ set tags=tags;                                                " 先在当前目�
 set autochdir                                                 " 改变vim的当前目录为打开的文件所在目录
 set cscopetag
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" tagbar 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tagbar_width = 30
+let g:tagbar_show_visibility = 1
+let g:tagbar_hide_nonpublic = 0
+let g:tagbar_autoshowtag = 1
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nerdtree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 打开目录时不显示隐藏目录和文件
 let g:netrw_hide= 1
 let g:netrw_list_hide= '^\..*'
 
-" minibufexpl插件的一般设置
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" minibufexpl
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:miniBufExplMapWindowNavVim = 1
 let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1
 
-" python-mode的设置
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" python-mode
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:pymode_options_max_line_length = 999
 let g:pymode = 1
 let g:pymode_options = 0
-
-" Documentation
 let g:pymode_doc = 0
 let g:pymode_doc_key = 'K'
-
-"Linting
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
-" Auto check on save
 let g:pymode_lint_on_write = 0
-
-" Support virtualenv
-let g:pymode_virtualenv = 0
-
-" Enable breakpoints plugin
+let g:pymode_virtualenv = 1
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_key = 'b'
-
-" syntax highlighting
 let g:pymode_syntax = 1
 let g:pymode_syntax_all = 1
 let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-"rope setting
 let g:pymode_rope = 0
 let g:pymode_rope_lookup_project = 0 "一定要加这个，要不然遇到中文目录会乱码 的
 let g:pymode_rope_rename_bind = '<F2>' "改名的
@@ -492,7 +563,10 @@ let g:pymode_rope_rename_bind = '<F2>' "改名的
 let g:pymode_folding = 0 "这个是一打开的时候，就折叠的
 
 
-" syntastic的设置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" syntastic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
@@ -502,18 +576,26 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" pydiction字典位置
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" pydiction
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:pydiction_location = '~/.vim/bundle/pydiction/complete-dict'
 
-" powerline配置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" powerline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set laststatus=2     " Always show the statusline
 set t_Co=256         " Explicitly tell Vim that the terminal support 256 colors
 let g:Powerline_symbols = 'unicode'
+let g:Powerline_cache_enabled = 0
+let g:Powerline_stl_path_style = 'full'
 
 
-" YCM配置
 
-" YouCompleteMe 功能
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" YouCompleteMe
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 补全功能在注释中同样有效
 let g:ycm_complete_in_comments=1
 " 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
@@ -535,23 +617,24 @@ let g:ycm_seed_identifiers_with_syntax=1
 let g:ycm_key_invoke_completion = '<M-;>'
 " 设置转到定义处的快捷键为ALT + G，这个功能非常赞
 ""nmap <M-g> :YcmCompleter GoToDefinitionElseDeclaration <C-R>=expand("<cword>")<CR><CR>
-
 nnoremap <C-\> :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-indent-guides
-let g:indent_guides_enable_on_vim_startup = 1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:indent_guides_enable_on_vim_startup = 0
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey
+nmap <silent> <C-i> <Plug>IndentGuidesToggle
 
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" neocomplete
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:acp_enableAtStartup = 0
-" Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
 let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
@@ -628,12 +711,18 @@ endif
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Gist
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gist_post_private = 1
 let g:gist_open_browser_after_post = 1   " 创建后直接打开浏览器查看
 
-" superTab 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" superTab
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " fencview
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:fencview_autodetect = 1
