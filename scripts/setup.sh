@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # -*- coding:utf-8 -*-
 
-
 #if [ -f /usr/bin/lsb_release ]; then
 #    OS=$(/usr/bin/lsb_release -d | awk '{print $2}' | sed 's/^[ t]*//g' | tr [A-Z] [a-z])
 #else
@@ -20,6 +19,7 @@ fi
 rm -rf ~/.vim  ~/.vimrc
 git clone https://git.ustclug.org/zhangkai/vim.git ~/.vim
 cd ~/.vim
+git remote add ustc git@git.ustclug.org:zhangkai/vim.git 
 git branch --set-upstream-to=origin/master master
 
 cd ~/.vim/scripts
