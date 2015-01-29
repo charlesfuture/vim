@@ -25,7 +25,7 @@ Plugin 'rkulla/pydiction'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-scripts/xptemplate'
 Plugin 'vim-scripts/nginx.vim'
-Plugin 'pangloss/vim-javascript'
+"Plugin 'pangloss/vim-javascript'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'ervandew/supertab'
 Plugin 'nathanaelkane/vim-indent-guides'
@@ -37,7 +37,7 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'mbbill/fencview'
 Plugin 'fholgado/minibufexpl.vim'
-
+Plugin 'lukaszb/vim-web-indent'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
