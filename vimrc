@@ -14,7 +14,7 @@ call vundle#begin()
 "Plugin 'tpope/vim-pathogen'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'mattn/emmet-vim' 
+Plugin 'mattn/emmet-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'groenewege/vim-less'
 Plugin 'plasticboy/vim-markdown'
@@ -34,9 +34,12 @@ Plugin 'yonchu/accelerated-smooth-scroll'
 Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'terryma/vim-multiple-cursors'
-Plugin 'dkprice/vim-easygrep'
+"Plugin 'dkprice/vim-easygrep'
 Plugin 'mbbill/fencview'
 Plugin 'fholgado/minibufexpl.vim'
+"Plugin 'vim-scripts/genutils'
+"Plugin 'vim-scripts/lookupfile'
+Plugin 'troydm/asyncfinder.vim'
 
 
 call vundle#end()            " required
@@ -286,15 +289,15 @@ function TitleDet()
     call AddTitle()
 endfunction
 
-autocmd BufNewfile *.h exec ":call Bar()"
-function! Bar()
+autocmd BufNewfile *.h exec ":call SetHead()"
+function! SetHead()
 python << EOF
 import vim
 buf = vim.current.buffer
 vim.command('let title=expand("%:r")')
 name = vim.eval("title")
 name = "_" + name.upper() + "_H"
-print "Lines: {0}".format(len(buf))
+#print "Lines: {0}".format(len(buf))
 vim.command('call append(0, "#ifndef %s")'%name)
 vim.command('call append(1, "#define %s")'%name)
 buf.append("\n")
@@ -302,6 +305,74 @@ buf.append("#endif")
 
 EOF
 endfunction
+
+function! Q2B()
+python << EOF
+import vim
+
+ustring = vim.current.line.decode('utf-8')
+rstring = ""
+for uchar in ustring:
+    inside_code=ord(uchar)
+    if inside_code == 12288:                              #全角空格直接转换
+        inside_code = 32
+    elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
+        inside_code -= 65248
+    rstring += unichr(inside_code)
+vim.current.line = rstring.encode('utf-8')
+
+'''
+buf = vim.current.buffer
+for index, ustring in enumerate(buf):
+    ustring = ustring.decode('utf-8')
+    rstring = ""
+    for uchar in ustring:
+        inside_code=ord(uchar)
+        if inside_code == 12288:                              #全角空格直接转换
+            inside_code = 32
+        elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
+            inside_code -= 65248
+        rstring += unichr(inside_code)
+    buf[index] = rstring.encode('utf-8')
+'''
+EOF
+endfunction
+
+
+function! B2Q()
+python << EOF
+import vim
+
+ustring = vim.current.line.decode('utf-8')
+rstring = ""
+for uchar in ustring:
+    inside_code=ord(uchar)
+    if inside_code == 12288:                              #全角空格直接转换
+        inside_code = 32
+    elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
+        inside_code -= 65248
+    rstring += unichr(inside_code)
+vim.current.line = rstring.encode('utf-8')
+
+'''
+buf = vim.current.buffer
+for index, ustring in enumerate(buf):
+    ustring = ustring.decode('utf-8')
+    rstring = ""
+    for uchar in ustring:
+        inside_code=ord(uchar)
+        if inside_code == 32:                                 #半角空格直接转化
+            inside_code = 12288
+        elif inside_code >= 32 and inside_code <= 126:        #半角字符（除空格）根据关系转化
+            inside_code += 65248
+
+        rstring += unichr(inside_code)
+    buf[index] = rstring.encode('utf-8')
+'''
+EOF
+endfunction
+
+
 
 
 "定义函数SetTitle，自动插入文件头
@@ -382,24 +453,22 @@ endfunc
 "c     表示在命令行模式下生效
 "(n|v|i|c)(map|unmap|mapclear) 分别表示各种模式下的映射，取消某个按键映射，取消全部映射
 " <C-a> 表示Ctrl+a, <A-a>表示Alt+a
+" <leader>默认是\,使用help <ledaer>查看,修改成了,
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader = ","
+let g:mapleader = ","
 
-nmap <leader>w :w!<cr>
 nmap <leader>f :find<cr>
+
+" 新建标签
+map <C-F2> :tabnew<CR>
+
+" 设置空格键开关折叠
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' :'zo')<CR>
 
 " 映射全选+复制 Ctrl+a
 map <C-A> ggVGY
 map! <C-A> <Esc>ggVGY
-" 选中状态下 Ctrl+c 复制
-vmap <C-c> "+y
-
-" 新建标签
-map <C-F2> :tabnew<CR>
-" 打开树状文件目录
-map <C-F4> \be
-
-" 设置空格键开关折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' :'zo')<CR>
 
 " 绑定复制到系统剪贴板快捷键
 vmap <leader>c "+y
@@ -414,8 +483,10 @@ nmap wq :wq<CR>
 nmap qq :q!<CR>
 
 nmap <C-l> :PymodeLint<CR>
-nmap <C-m> :PymodeLintAuto<CR>
 nmap <C-k> :setlocal textwidth=500<CR>
+" Ctrl+m切换全角半角
+vmap <C-m> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+nmap <C-m> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
 
 " F1:帮助(默认)
 " F2:切换窗口
@@ -433,8 +504,8 @@ nmap <C-k> :setlocal textwidth=500<CR>
 noremap <F2> <C-w>w
 nnoremap <F3> :%s/\s\+$//g<CR>
 nnoremap <F4> :%s/^\n\+$//g<CR>
-map <F5> :SCCompileRun<CR>
-map <F6> :call Debug()<CR>
+map <F5> :SCCompileRun<CR
+vmap <F6> :call Q2B()<CR>
 map <F7> :set paste<CR>i
 map <silent> <F8> :NERDTreeToggle<CR>
 map <silent> <F9> :TagbarToggle<cr>
@@ -511,7 +582,7 @@ set autochdir                                                 " 改变vim的当�
 set cscopetag
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" tagbar 
+" tagbar
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tagbar_width = 30
 let g:tagbar_show_visibility = 1
@@ -726,3 +797,193 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " fencview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:fencview_autodetect = 1
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" lookupfile
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:LookupFile_MinPatLength = 2               "最少输入2个字符才开始查找
+let g:LookupFile_PreserveLastPattern = 0        "不保存上次查找的字符串
+let g:LookupFile_PreservePatternHistory = 1     "保存查找历史
+let g:LookupFile_AlwaysAcceptFirst = 1          "回车打开第一个匹配项目
+let g:LookupFile_AllowNewFiles = 0              "不允许创建不存在的文件
+"if filereadable("./filenametags")                "设置tag文件的名字
+"let g:LookupFile_TagExpr = '"./filenametags"'
+"endif
+"映射LookupFile为,lk
+nmap <silent> <leader>lk :LUTags<cr>
+"映射LUBufs为,ll
+nmap <silent> <leader>ll :LUBufs<cr>
+"映射LUWalk为,lw
+nmap <silent> <leader>lw :LUWalk<cr>
+
+" lookup file with ignore case
+function! LookupFile_IgnoreCaseFunc(pattern)
+    let _tags = &tags
+    try
+        let &tags = eval(g:LookupFile_TagExpr)
+        let newpattern = '\c' . a:pattern
+        let tags = taglist(newpattern)
+    catch
+        echohl ErrorMsg | echo "Exception: " . v:exception | echohl NONE
+        return ""
+    finally
+        let &tags = _tags
+    endtry
+
+    " Show the matches for what is typed so far.
+    let files = map(tags, 'v:val["filename"]')
+    return files
+endfunction
+let g:LookupFile_LookupFunc = 'LookupFile_IgnoreCaseFunc' 
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 全角半角转换
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ywpunc = {
+            \'''':['‘', '’'],
+            \'"':['“', '”'],
+            \'...' : '……',
+            \'!': '！',
+            \',': '，',
+            \'.': '。',
+            \'`' : '｀',
+            \':' : '：',
+            \'(' : '（',
+            \')' : '）',
+            \'[' : '［',
+            \']' : '］',
+            \'<' : '＜',
+            \'>' : '＞',
+            \'-' : '－',
+            \'_' : '＿',
+            \'=' : '＝',
+            \'*' : '＊',
+            \'&' : '＆',
+            \'$' : '￥',
+            \'@' : '＠',
+            \'#' : '＃',
+            \'^' : '＾',
+            \'\\' : '＼',
+            \'/' : '／',
+            \'+' : '＋',
+            \';' : '；',
+            \'?' : '？',
+            \'%' : '％',
+            \' ' : '　',
+            \'{' : '｛',
+            \'}' : '｝',
+            \'1' : '１',
+            \'2' : '２',
+            \'3' : '３',
+            \'4' : '４',
+            \'5' : '５',
+            \'6' : '６',
+            \'7' : '７',
+            \'8' : '８',
+            \'9' : '９',
+            \'0' : '０',
+            \'a' : 'ａ',
+            \'b' : 'ｂ',
+            \'c' : 'ｃ',
+            \'d' : 'ｄ',
+            \'e' : 'ｅ',
+            \'f' : 'ｆ',
+            \'g' : 'ｇ',
+            \'h' : 'ｈ',
+            \'i' : 'ｉ',
+            \'j' : 'ｊ',
+            \'k' : 'ｋ',
+            \'l' : 'ｌ',
+            \'m' : 'ｍ',
+            \'n' : 'ｎ',
+            \'o' : 'ｏ',
+            \'p' : 'ｐ',
+            \'q' : 'ｑ',
+            \'r' : 'ｒ',
+            \'s' : 'ｓ',
+            \'t' : 'ｔ',
+            \'u' : 'ｕ',
+            \'v' : 'ｖ',
+            \'w' : 'ｗ',
+            \'x' : 'ｘ',
+            \'y' : 'ｙ',
+            \'z' : 'ｚ',
+            \'A' : 'Ａ',
+            \'B' : 'Ｂ',
+            \'C' : 'Ｃ',
+            \'D' : 'Ｄ',
+            \'E' : 'Ｅ',
+            \'F' : 'Ｆ',
+            \'G' : 'Ｇ',
+            \'H' : 'Ｈ',
+            \'I' : 'Ｉ',
+            \'J' : 'Ｊ',
+            \'K' : 'Ｋ',
+            \'L' : 'Ｌ',
+            \'M' : 'Ｍ',
+            \'N' : 'Ｎ',
+            \'O' : 'Ｏ',
+            \'P' : 'Ｐ',
+            \'Q' : 'Ｑ',
+            \'R' : 'Ｒ',
+            \'S' : 'Ｓ',
+            \'T' : 'Ｔ',
+            \'U' : 'Ｕ',
+            \'V' : 'Ｖ',
+            \'W' : 'Ｗ',
+            \'X' : 'Ｘ',
+            \'Y' : 'Ｙ',
+            \'Z' : 'Ｚ',
+             \}
+let g:ywpair = 1
+""vmap <C-m> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+""nmap <C-m> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+
+
+if !exists("g:ywpair")
+     let s:ywpair = 0
+else
+     let s:ywpair = g:ywpair
+endif
+function Yw_strzhpunc2enpunc(str, m) " {{{ 标点中英互换
+     if !exists("g:ywpunc") || a:str == ''
+         return ''
+     endif
+     let strlst = split(a:str, '\zs')
+     let transtr = ''
+     for i in range(len(strlst))
+         let tran = <SID>Yw_zhpunc2enpunc(strlst[i], a:m)
+         if type(tran) == type([])
+             if s:ywpair == 1
+                 let pairchar0 = tran[0]
+                 let pairchar1 = tran[1]
+                 let pairidx0 = match(transtr, '[^' . pairchar0 . ']*$')
+                 let pairidx1 = match(transtr, '[^' . pairchar1 . ']*$')
+                 let tranchar = (pairidx0 <= pairidx1 ? pairchar0 : pairchar1)
+             else
+                 let tranchar = tran[0]
+             endif
+         else
+             let tranchar = tran
+         endif
+         unlet tran
+         let transtr .= tranchar
+     endfor
+     return transtr
+endfunction " }}}
+
+function s:Yw_zhpunc2enpunc(c, m) " {{{ 标点中英互换
+     let escapetranchar = '\V' . escape(a:c, '\')
+     let keyidx = match(keys(g:ywpunc), escapetranchar)
+     let validx = match(values(g:ywpunc), escapetranchar)
+     if (keyidx != -1) && (a:m == "" || a:m == 'l2r')
+         let tranchar = values(g:ywpunc)[keyidx]
+     elseif (validx != -1) && (a:m == "" || a:m == 'r2l')
+         let tranchar = keys(g:ywpunc)[validx]
+     else
+         let tranchar = a:c
+     endif
+     return tranchar
+endfunction " }}}
