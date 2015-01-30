@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 # -*- coding:utf-8 -*-
 
+#if [ -f /usr/bin/lsb_release ]; then
+#    OS=$(/usr/bin/lsb_release -d | awk '{print $2}' | sed 's/^[ t]*//g' | tr [A-Z] [a-z])
+#else
+#   OS=$(cat /etc/issue | sed -n '1p' | awk '{print $1}' | tr [A-Z] [a-z])
+#fi
 
-if [ -f /usr/bin/lsb_release ]; then
-    OS=$(/usr/bin/lsb_release -d | awk '{print $2}' | sed 's/^[ t]*//g' | tr [A-Z] [a-z])
-else
-    OS=$(cat /etc/issue | sed -n '1p' | awk '{print $1}' | tr [A-Z] [a-z])
-fi
-
-if `echo $OS | grep -q -E 'ubuntu|debian'`; then
+if `command -v apt-get >/dev/null 2>&1`; then
     cmd="apt-get install ncurses-dev python-dev lua5.1 liblua5.1-dev ctags cmake build-essential"
-elif `echo $OS | grep -q -E 'centos|fedora'`; then
+elif `command -v yum >/dev/null 2>&1`; then
     cmd="yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++"
 else
     echo 'please install python python-dev lua lua-dev mannually!'
@@ -20,6 +19,7 @@ fi
 rm -rf ~/.vim  ~/.vimrc
 git clone https://git.ustclug.org/zhangkai/vim.git ~/.vim
 cd ~/.vim
+git remote add ustc git@git.ustclug.org:zhangkai/vim.git 
 git branch --set-upstream-to=origin/master master
 
 cd ~/.vim/scripts
