@@ -306,6 +306,8 @@ buf.append("#endif")
 EOF
 endfunction
 
+
+
 function! Q2B()
 python << EOF
 import vim
@@ -372,6 +374,16 @@ for index, ustring in enumerate(buf):
 EOF
 endfunction
 
+function! Note()
+python << EOF
+import vim
+import note
+buf = vim.current.buffer
+vim.command('let title=expand("%:r")')
+name = vim.eval("title")
+note.Note().makeNote(name,"\n".join(buf))
+EOF
+endfunc
 
 
 
@@ -988,3 +1000,6 @@ function s:Yw_zhpunc2enpunc(c, m) " {{{ 标点中英互换
      endif
      return tranchar
 endfunction " }}}
+
+
+
