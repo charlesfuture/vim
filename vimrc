@@ -483,10 +483,11 @@ nmap wq :wq<CR>
 nmap qq :q!<CR>
 
 nmap <C-l> :PymodeLint<CR>
+nmap <C-m> :PymodeLintAuto<CR>
 nmap <C-k> :setlocal textwidth=500<CR>
-" Ctrl+m切换全角半角
-vmap <C-m> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
-nmap <C-m> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+" Ctrl+b切换全角半角
+vmap <C-b> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+nmap <C-b> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
 
 " F1:帮助(默认)
 " F2:切换窗口
