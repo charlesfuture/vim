@@ -316,10 +316,18 @@ ustring = vim.current.line.decode('utf-8')
 rstring = ""
 for uchar in ustring:
     inside_code=ord(uchar)
-    if inside_code == 12288:                              #全角空格直接转换
-        inside_code = 32
-    elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
-        inside_code -= 65248
+    if inside_code == 12288 or (inside_code >= 65281 and inside_code <= 65374):
+        if inside_code == 12288:                              #全角空格直接转换
+            inside_code = 32
+        elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
+            inside_code -= 65248
+
+    elif inside_code >= 32 and inside_code <= 126:
+        if inside_code == 32:                                 #半角空格直接转化
+            inside_code = 12288
+        elif inside_code >= 33 and inside_code <= 126:        #半角字符（除空格）根据关系转化
+            inside_code += 65248
+
     rstring += unichr(inside_code)
 vim.current.line = rstring.encode('utf-8')
 
@@ -349,10 +357,10 @@ ustring = vim.current.line.decode('utf-8')
 rstring = ""
 for uchar in ustring:
     inside_code=ord(uchar)
-    if inside_code == 12288:                              #全角空格直接转换
-        inside_code = 32
-    elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
-        inside_code -= 65248
+    if inside_code == 32:                                 #半角空格直接转化
+        inside_code = 12288
+    elif inside_code >= 32 and inside_code <= 126:        #半角字符（除空格）根据关系转化
+        inside_code += 65248
     rstring += unichr(inside_code)
 vim.current.line = rstring.encode('utf-8')
 
@@ -485,9 +493,16 @@ nmap qq :q!<CR>
 nmap <C-l> :PymodeLint<CR>
 nmap <C-m> :PymodeLintAuto<CR>
 nmap <C-k> :setlocal textwidth=500<CR>
-" Ctrl+b切换全角半角
-vmap <C-b> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
-nmap <C-b> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+
+vmap <C-g> s<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+nmap <C-g> yls<C-r>=Yw_strzhpunc2enpunc(@", '')<CR><ESC>
+" ,+c 全角半角切换
+map <leader>c :call Q2B()<CR>
+
+" Ctrl+e 保存到印象笔记
+map <leader>e :call Note()<CR>
+map <leader>s :call SaveNote()<CR>
+map <leader>p :call PubNote()<CR>
 
 " F1:帮助(默认)
 " F2:切换窗口
