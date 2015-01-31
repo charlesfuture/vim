@@ -41,6 +41,7 @@ Plugin 'fholgado/minibufexpl.vim'
 "Plugin 'vim-scripts/lookupfile'
 Plugin 'troydm/asyncfinder.vim'
 Plugin 'lukaszb/vim-web-indent'
+Plugin 'zkdfbb/evernote'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -297,7 +298,6 @@ buf = vim.current.buffer
 vim.command('let title=expand("%:r")')
 name = vim.eval("title")
 name = "_" + name.upper() + "_H"
-#print "Lines: {0}".format(len(buf))
 vim.command('call append(0, "#ifndef %s")'%name)
 vim.command('call append(1, "#define %s")'%name)
 buf.append("\n")
@@ -373,18 +373,6 @@ for index, ustring in enumerate(buf):
 '''
 EOF
 endfunction
-
-function! Note()
-python << EOF
-import vim
-import note
-buf = vim.current.buffer
-vim.command('let title=expand("%:r")')
-name = vim.eval("title")
-note.Note().makeNote(name,"\n".join(buf))
-EOF
-endfunc
-
 
 
 "定义函数SetTitle，自动插入文件头
@@ -848,7 +836,7 @@ function! LookupFile_IgnoreCaseFunc(pattern)
     let files = map(tags, 'v:val["filename"]')
     return files
 endfunction
-let g:LookupFile_LookupFunc = 'LookupFile_IgnoreCaseFunc' 
+let g:LookupFile_LookupFunc = 'LookupFile_IgnoreCaseFunc'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
