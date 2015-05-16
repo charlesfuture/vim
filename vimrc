@@ -26,20 +26,20 @@ Plugin 'Lokaltog/vim-powerline'
 Plugin 'vim-scripts/xptemplate'
 Plugin 'vim-scripts/nginx.vim'
 "Plugin 'pangloss/vim-javascript'
-Plugin 'Shougo/neocomplete.vim'
+"Plugin 'Shougo/neocomplete.vim'
 Plugin 'ervandew/supertab'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
-Plugin 'yonchu/accelerated-smooth-scroll'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/gist-vim'
-Plugin 'terryma/vim-multiple-cursors'
+"Plugin 'yonchu/accelerated-smooth-scroll'
+"Plugin 'mattn/webapi-vim'
+"Plugin 'mattn/gist-vim'
+"Plugin 'terryma/vim-multiple-cursors'
 "Plugin 'dkprice/vim-easygrep'
-Plugin 'mbbill/fencview'
+"Plugin 'mbbill/fencview'
 Plugin 'fholgado/minibufexpl.vim'
 "Plugin 'vim-scripts/genutils'
 "Plugin 'vim-scripts/lookupfile'
-Plugin 'troydm/asyncfinder.vim'
+"Plugin 'troydm/asyncfinder.vim'
 Plugin 'lukaszb/vim-web-indent'
 Plugin 'zkdfbb/evernote'
 
@@ -137,13 +137,13 @@ au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|
 ""set selectmode=mouse,key
 
 
-" 设置编码
-"set langmenu=zh_CN.UTF-8
-"set helplang=cn
-"set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-"set termencoding=utf-8
-"set encoding=utf-8
-"set fileencoding=utf-8
+"设置编码
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set termencoding=utf-8
+set encoding=utf-8
+set fileencoding=utf-8
 
 
 " 显示中文帮助
@@ -213,12 +213,12 @@ func SetPython()
     set cinwords=if,elif,else,for,while,try,expect,finally,def,class
 endfunc
 "读入html，javascript, css，less文件，设置缩进格式
-autocmd BufNewFile,BufRead *.html,*.js,*.css,*.less exec ":call SetIntent()"
-func SetIntent()
-    set tabstop=2
-    set softtabstop=2
-    set shiftwidth=2
-endfunc
+""autocmd BufNewFile,BufRead *.html,*.js,*.css,*.less exec ":call SetIntent()"
+""func SetIntent()
+""    set tabstop=2
+""    set softtabstop=2
+""    set shiftwidth=2
+""endfunc
 "读入C文件，设置折叠方式为syntax
 autocmd BufNewFile,BufRead *.[ch],*.cpp set foldmethod=syntax
 "读入其它文件，设置折叠方式为indent
@@ -232,7 +232,7 @@ autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mkd
 "nginx配置文件
 "注释掉nginx/plugin中的setlocal iskeyword+=:,否则python文件数字后跟冒号会出现红色着重号
-autocmd BufRead,BufNewFile /etc/nginx/conf.d/* set ft=nginx
+autocmd BufRead,BufNewFile /etc/nginx/conf.d/*,*.nginx set ft=nginx
 
 "进行版权声明的设置
 "添加或更新头
@@ -719,85 +719,85 @@ nmap <silent> <C-i> <Plug>IndentGuidesToggle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " neocomplete
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-" Or set this.
-"let g:neocomplete#enable_cursor_hold_i = 1
-" Or set this.
-"let g:neocomplete#enable_insert_char_pre = 1
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
+""  let g:acp_enableAtStartup = 0
+""  let g:neocomplete#enable_at_startup = 1
+""  let g:neocomplete#enable_smart_case = 1
+""  let g:neocomplete#sources#syntax#min_keyword_length = 3
+""  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+""  
+""  " Define dictionary.
+""  let g:neocomplete#sources#dictionary#dictionaries = {
+""      \ 'default' : '',
+""      \ 'vimshell' : $HOME.'/.vimshell_hist',
+""      \ 'scheme' : $HOME.'/.gosh_completions'
+""          \ }
+""  
+""  " Define keyword.
+""  if !exists('g:neocomplete#keyword_patterns')
+""      let g:neocomplete#keyword_patterns = {}
+""  endif
+""  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+""  
+""  " Plugin key-mappings.
+""  inoremap <expr><C-g>     neocomplete#undo_completion()
+""  inoremap <expr><C-l>     neocomplete#complete_common_string()
+""  
+""  " Recommended key-mappings.
+""  " <CR>: close popup and save indent.
+""  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+""  function! s:my_cr_function()
+""    return neocomplete#close_popup() . "\<CR>"
+""    " For no inserting <CR> key.
+""    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+""  endfunction
+""  " <TAB>: completion.
+""  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+""  " <C-h>, <BS>: close popup and delete backword char.
+""  inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+""  inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+""  inoremap <expr><C-y>  neocomplete#close_popup()
+""  inoremap <expr><C-e>  neocomplete#cancel_popup()
+""  " Close popup by <Space>.
+""  "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+""  
+""  " For cursor moving in insert mode(Not recommended)
+""  "inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
+""  "inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
+""  "inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
+""  "inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
+""  " Or set this.
+""  "let g:neocomplete#enable_cursor_hold_i = 1
+""  " Or set this.
+""  "let g:neocomplete#enable_insert_char_pre = 1
+""  
+""  " AutoComplPop like behavior.
+""  "let g:neocomplete#enable_auto_select = 1
+""  
+""  " Shell like behavior(not recommended).
+""  "set completeopt+=longest
+""  "let g:neocomplete#enable_auto_select = 1
+""  "let g:neocomplete#disable_auto_complete = 1
+""  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+""  
+""  " Enable omni completion.
+""  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+""  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+""  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+""  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+""  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+""  
+""  " Enable heavy omni completion.
+""  if !exists('g:neocomplete#sources#omni#input_patterns')
+""    let g:neocomplete#sources#omni#input_patterns = {}
+""  endif
+""  "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+""  "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+""  "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+""  
+""  " For perlomni.vim setting.
+""  " https://github.com/c9s/perlomni.vim
+""  let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+""  
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Gist
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
