@@ -17,15 +17,16 @@ else
 fi
 
 rm -rf ~/.vim  ~/.vimrc
-git clone https://git.ustclug.org/zhangkai/vim.git ~/.vim
+git clone git@github.com:zkdfbb/vim.git ~/.vim
 cd ~/.vim
-git remote add ustc git@git.ustclug.org:zhangkai/vim.git 
 git branch --set-upstream-to=origin/master master
 
+#首先安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
 cd ~/.vim/scripts
 tar xf vim-7.4.tar.bz2
 cd vim74
 
+#安装依赖,添加python,lua支持除了安装python,lua5.1以外还需要安装对于的dev, 可选perl,ruby
 if [ $(id -u) != "0" ]; then
     sudo $cmd -y
 else
