@@ -17,9 +17,8 @@ else
 fi
 
 rm -rf ~/.vim  ~/.vimrc
-git clone git@github.com:zkdfbb/vim.git ~/.vim
+git clone https://github.com/zkdfbb/vim.git ~/.vim
 cd ~/.vim
-git branch --set-upstream-to=origin/master master
 
 #首先安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
 cd ~/.vim/scripts
@@ -28,20 +27,12 @@ cd vim74
 
 #安装依赖,添加python,lua支持除了安装python,lua5.1以外还需要安装对于的dev, 可选perl,ruby
 if [ $(id -u) != "0" ]; then
-    sudo $cmd -y
-else
-    $cmd -y
+    sudo su
 fi
 
+$cmd -y
 ./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr
-make -j10
-
-if [ $(id -u) != "0" ];then
-    sudo make install
-else
-    make install
-fi
-
+make -j10 && make install
 
 #cd ~/.vim/bundle/YouCompleteMe
 #git submodule update --init --recursive
