@@ -61,7 +61,7 @@
 /* #undef USEMEMCPY */
 
 /* Define when "man -s 2" is to be used */
-/* #undef USEMAN_S */
+#define USEMAN_S 1
 
 /* Define to empty if the keyword does not work.  */
 /* #undef const */
@@ -182,7 +182,7 @@
 #define HAVE_READLINK 1
 #define HAVE_RENAME 1
 #define HAVE_SELECT 1
-#define HAVE_SELINUX 1
+/* #undef HAVE_SELINUX */
 #define HAVE_SETENV 1
 #define HAVE_SETPGID 1
 #define HAVE_SETSID 1
@@ -191,7 +191,7 @@
 #define HAVE_SIGSET 1
 /* #undef HAVE_SIGSETJMP */
 #define HAVE_SIGSTACK 1
-#define HAVE_SIGVEC 1
+/* #undef HAVE_SIGVEC */
 #define HAVE_STRCASECMP 1
 #define HAVE_STRERROR 1
 #define HAVE_STRFTIME 1
@@ -242,7 +242,7 @@
 #define HAVE_SGTTY_H 1
 #define HAVE_STDINT_H 1
 #define HAVE_STRINGS_H 1
-/* #undef HAVE_STROPTS_H */
+#define HAVE_STROPTS_H 1
 /* #undef HAVE_SYS_ACCESS_H */
 /* #undef HAVE_SYS_ACL_H */
 /* #undef HAVE_SYS_DIR_H */

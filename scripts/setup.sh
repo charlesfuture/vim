@@ -8,7 +8,7 @@
 #fi
 
 if `command -v apt-get >/dev/null 2>&1`; then
-    cmd="apt-get install ncurses-dev python-dev lua5.1 liblua5.1-dev ctags cmake build-essential"
+    cmd="apt-get install ncurses-dev python python-dev lua5.1 lua5.1-dev liblua5.1-dev ctags cmake build-essential gcc make"
 elif `command -v yum >/dev/null 2>&1`; then
     cmd="yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++"
 else

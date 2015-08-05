@@ -24,7 +24,7 @@ CPPFLAGS	=  -I/usr/local/include
 srcdir		= .
 
 LDFLAGS		=  -L/usr/local/lib -Wl,--as-needed
-LIBS		= -lm -ltinfo -lelf -lnsl  -lselinux  -liconv -ldl
+LIBS		= -lm -ltinfo -lnsl   -ldl
 TAGPRG		= ctags -I INIT+ --fields=+S
 
 CPP		= gcc -E
@@ -37,10 +37,10 @@ X_PRE_LIBS	=
 X_EXTRA_LIBS	= 
 X_LIBS		= 
 
-LUA_LIBS	= -L/usr/lib -llua
+LUA_LIBS	= -L/usr/lib -llua5.1
 LUA_SRC		= if_lua.c
 LUA_OBJ		= objects/if_lua.o
-LUA_CFLAGS	= -I/usr/include
+LUA_CFLAGS	= -I/usr/include/lua5.1
 LUA_PRO		= if_lua.pro
 
 MZSCHEME_LIBS	= 
@@ -62,10 +62,10 @@ PERL_CFLAGS	=
 
 PYTHON_SRC	= if_python.c
 PYTHON_OBJ	= objects/if_python.o
-PYTHON_CFLAGS	= -I/usr/include/python2.6 -DPYTHON_HOME='"/usr"' -pthread -fPIE
-PYTHON_LIBS	= -L/usr/lib64/python2.6/config -lpython2.6 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic
-PYTHON_CONFDIR	= /usr/lib64/python2.6/config
-PYTHON_GETPATH_CFLAGS = -DPYTHONPATH='":/usr/lib64/python2.6/site-packages/distribute-0.6.28-py2.6.egg:/usr/lib64/python2.6/site-packages/matplotlib-1.3.0-py2.6-linux-x86_64.egg:/usr/lib64/python2.6/site-packages/nose-1.3.0-py2.6.egg:/usr/lib64/python2.6/site-packages/pyparsing-2.0.1-py2.6.egg:/usr/lib64/python2.6/site-packages/python_dateutil-2.1-py2.6.egg:/usr/lib/python2.6/site-packages/python_memcached-1.53-py2.6.egg:/usr/lib/python2.6/site-packages/redis-2.8.0-py2.6.egg:/usr/lib/python2.6/site-packages/PIL-1.1.7-py2.6-linux-x86_64.egg:/usr/lib/python2.6/site-packages/numpy-1.7.1-py2.6-linux-x86_64.egg:/usr/lib/python2.6/site-packages/Cython-0.19.1-py2.6-linux-x86_64.egg:/usr/lib/python2.6/site-packages/scikit_image-0.8.2-py2.6-linux-x86_64.egg:/usr/lib/python2.6/site-packages/scipy-0.12.0-py2.6-linux-x86_64.egg:/usr/lib/python2.6/site-packages/BeautifulSoup-3.2.1-py2.6.egg:/usr/lib/python2.6/site-packages/Pyrex-0.9.9-py2.6.egg:/usr/lib/python2.6/site-packages/pip-1.4.1-py2.6.egg:/usr/lib/python2.6/site-packages/qrcode-4.0.4-py2.6.egg:/usr/lib/python2.6/site-packages/poster-0.8.1-py2.6.egg:/usr/lib/python2.6/site-packages/qiniu-6.1.6-py2.6.egg:/usr/lib/python2.6/site-packages/supervisor-4.0.0_dev-py2.6.egg:/usr/lib/python2.6/site-packages/meld3-1.0.0-py2.6.egg:/usr/lib/python2.6/site-packages/jieba-0.33-py2.6.egg:/usr/lib/python2.6/site-packages/python_Levenshtein-0.11.2-py2.6-linux-x86_64.egg:/usr/lib64/python26.zip:/usr/lib64/python2.6:/usr/lib64/python2.6/plat-linux2:/usr/lib64/python2.6/lib-tk:/usr/lib64/python2.6/lib-old:/usr/lib64/python2.6/lib-dynload:/usr/lib64/python2.6/site-packages:/usr/lib64/python2.6/site-packages/PIL:/usr/lib/python2.6/site-packages:/home/digua/project/modules:/usr/lib/python2.6/site-packages/setuptools-0.6c11-py2.6.egg-info"' -DPREFIX='"/usr"' -DEXEC_PREFIX='"/usr"'
+PYTHON_CFLAGS	= -I/usr/include/python2.7 -DPYTHON_HOME='"/usr"' -pthread -fPIE
+PYTHON_LIBS	= -L/usr/lib/python2.7/config-x86_64-linux-gnu -lpython2.7 -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
+PYTHON_CONFDIR	= /usr/lib/python2.7/config-x86_64-linux-gnu
+PYTHON_GETPATH_CFLAGS = -DPYTHONPATH='":/usr/lib/python2.7:/usr/lib/python2.7/plat-x86_64-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload:/usr/local/lib/python2.7/dist-packages:/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/dist-packages/PILcompat:/usr/lib/python2.7/dist-packages/gtk-2.0:/usr/lib/python2.7/dist-packages/ubuntu-sso-client"' -DPREFIX='"/usr"' -DEXEC_PREFIX='"/usr"'
 
 PYTHON3_SRC	= 
 PYTHON3_OBJ	= 
@@ -99,7 +99,7 @@ RUBY_LIBS	=
 SNIFF_SRC	= 
 SNIFF_OBJ	= 
 
-AWK		= gawk
+AWK		= mawk
 
 STRIP		= strip
 
