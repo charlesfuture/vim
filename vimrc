@@ -233,6 +233,10 @@ autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   set filetype=mk
 "nginx配置文件
 "注释掉nginx/plugin中的setlocal iskeyword+=:,否则python文件数字后跟冒号会出现红色着重号
 autocmd BufRead,BufNewFile /etc/nginx/conf.d/*,*.nginx set ft=nginx
+"pig高亮
+autocmd BufNewFile,BufRead *.pig set filetype=pig syntax=pig 
+
+
 
 "进行版权声明的设置
 "添加或更新头
@@ -242,7 +246,7 @@ function AddTitle()
         call append(2, "\##############################################")
         call append(3, "\#")
         call append(4, "\#  Author: zhangkai")
-        call append(5, "\#  Mail: zhangkaicpu@ict.ac.cn")
+        call append(5, "\#  Mail: zhangkai@conew.com")
         call append(6, "\#  Filename: ".expand("%"))
         call append(7, "\#  Last modified: ".strftime("%Y-%m-%d %H:%M"))
         call append(8, "\#")
