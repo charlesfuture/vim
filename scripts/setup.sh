@@ -31,8 +31,7 @@ if [ $(id -u) != "0" ]; then
 fi
 
 $cmd -y
-./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr
-make -j10 && make install
+./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr && make -j10 && make install && rm -rf vim74
 
 #cd ~/.vim/bundle/YouCompleteMe
 #git submodule update --init --recursive
