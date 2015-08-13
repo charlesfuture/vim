@@ -6,7 +6,9 @@ endif
 if ! exists('g:note_cache_dir')
     let g:note_cache_dir = simplify(expand('<sfile>:p:h') .'/..')
 endif
-
+let g:auth_token = "S=s10:U=130ae6:E=1552243edbc:C=14dca92c188:P=1cd:A=en-devtoken:V=2:H=874fffd205134361e7b24f1dc899a9fd"
+let g:note_store_url = "https://app.yinxiang.com/shard/s10/notestore"
+ 
 function! MakeNote(title, content, cache)
 python << EOF
 
@@ -21,21 +23,10 @@ import evernote.edam.error.ttypes as Errors
 class Evernote():
 
     def __init__(self):
-        self.authToken = "S=s10:U=130ae6:E=14da0123518:C=1464861091b:P=1cd:A=en-devtoken:V=2:H=9e43e5cb89a4b32b3450db64a5211ef0"
-        self.noteStoreUrl = "https://app.yinxiang.com/shard/s10/notestore"
+        self.authToken = vim.eval("g:auth_token")
+        self.noteStoreUrl = vim.eval("g:note_store_url")
         self.noteStore = Store(self.authToken, NoteStore.Client, self.noteStoreUrl)
-        self.memoGuid = '483065ca-ccc0-4bea-a62f-78c4d3fb5741'
-
-    def getUrls(self, delete=True):
-        authToken = self.authToken
-        noteStore = self.noteStore
-        weixin_guid = "c8c3b463-ba42-4cf5-ac69-5ee28c446460"
-        urls = []
-        for note in noteStore.findNotes(authToken, NoteFilter(notebookGuid=weixin_guid), 0, 100).notes:
-            urls.append(note.attributes.sourceURL)
-            if delete:
-                noteStore.deleteNote(authToken, note.guid)
-        return urls
+        self.memoGuid = self.getNoteBook("vim")
 
     def getNoteGuid(self, title):
         for note in self.noteStore.findNotes(self.authToken, NoteFilter(notebookGuid=self.memoGuid), 0, 100).notes:
@@ -142,3 +133,9 @@ for name in os.listdir("."):
 
 EOF
 endfunction
+
+
+command! -nargs=0 -bar note call Note()
+command! -nargs=0 -bar saveNote call PubNote()
+command! -nargs=0 -bar pubNote call SaveNote()
+
