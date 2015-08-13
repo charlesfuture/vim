@@ -17,7 +17,7 @@ else
 fi
 
 rm -rf ~/.vim  ~/.vimrc
-git clone https://github.com/zkdfbb/vim.git ~/.vim
+git clone digua@58.221.61.136:~/git/vim  ~/.vim
 cd ~/.vim
 
 #首先安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
