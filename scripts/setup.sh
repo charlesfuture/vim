@@ -8,9 +8,9 @@
 #fi
 
 if `command -v apt-get >/dev/null 2>&1`; then
-    cmd="apt-get install ncurses-dev python python-dev lua5.1 lua5.1-dev liblua5.1-dev ctags cmake build-essential gcc make"
+    cmd="apt-get install ncurses-dev python python-dev lua5.1 lua5.1-dev liblua5.1-dev ctags cmake build-essential gcc make -y"
 elif `command -v yum >/dev/null 2>&1`; then
-    cmd="yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++"
+    cmd="yum install ncurses-devel python-devel lua lua-devel ctags cmake gcc gcc-c++ -y"
 else
     echo 'please install python python-dev lua lua-dev mannually!'
     exit 1
@@ -30,7 +30,8 @@ if [ $(id -u) != "0" ]; then
     sudo su
 fi
 
-$cmd -y
+echo $cmd
+eval $cmd
 ./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes --prefix=/usr && make -j10 && make install && rm -rf vim74
 
 #cd ~/.vim/bundle/YouCompleteMe
