@@ -135,7 +135,7 @@ EOF
 endfunction
 
 
-command! -nargs=0 -bar note call Note()
-command! -nargs=0 -bar saveNote call PubNote()
-command! -nargs=0 -bar pubNote call SaveNote()
+command! -nargs=0 -bar Note call Note()
+command! -nargs=0 -bar SaveNote call PubNote()
+command! -nargs=0 -bar PubNote call SaveNote()
 
