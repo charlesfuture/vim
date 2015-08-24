@@ -7,6 +7,7 @@
 #   OS=$(cat /etc/issue | sed -n '1p' | awk '{print $1}' | tr [A-Z] [a-z])
 #fi
 
+set -x
 version=`vim --version | grep "7.4" | wc -l`
 python=`vim --version | grep "+python" | wc -l`
 lua=`vim --version | grep "+lua" | wc -l`
@@ -26,7 +27,7 @@ fi
 
 #安装依赖,添加python,lua支持除了安装python,lua5.1以外还需要安装对于的dev, 可选perl,ruby
 if [ $(id -u) != "0" ]; then
-    sudo su
+    cmd="sudo "$cmd
 fi
 echo $cmd
 eval $cmd
@@ -41,8 +42,7 @@ cd ~/.vim/scripts
 tar xf vim-7.4.tar.bz2
 cd vim74
 
-./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes && \
-make -j10 && make install && rm -rf vim74 && echo "everything is done successful"
+./configure --with-features=huge --enable-cscope --enable-fontset --enable-multibyte --enable-pythoninterp=yes --enable-luainterp=yes && make -j10 && sudo make install && cd ~/.vim && sudo rm -rf vim74 && echo "everything is done successful"
 
 #cd ~/.vim/bundle/YouCompleteMe
 #git submodule update --init --recursive
