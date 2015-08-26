@@ -35,12 +35,11 @@ Plugin 'flazz/vim-colorschemes'
 "Plugin 'terryma/vim-multiple-cursors'
 "Plugin 'dkprice/vim-easygrep'
 "Plugin 'mbbill/fencview'
-Plugin 'fholgado/minibufexpl.vim'
+"Plugin 'fholgado/minibufexpl.vim'
 "Plugin 'vim-scripts/genutils'
 "Plugin 'vim-scripts/lookupfile'
 "Plugin 'troydm/asyncfinder.vim'
 Plugin 'lukaszb/vim-web-indent'
-Plugin 'zkdfbb/evernote'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
