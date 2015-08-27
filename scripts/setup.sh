@@ -8,6 +8,12 @@
 #fi
 
 set -x
+
+rm -rf ~/.vim  ~/.vimrc
+git clone digua@58.221.61.136:~/git/vim  ~/.vim
+cd ~/.vim
+git remote add github https://github.com/zkdfbb/vim.git
+
 version=`vim --version | grep "7.4" | wc -l`
 python=`vim --version | grep "+python" | wc -l`
 lua=`vim --version | grep "+lua" | wc -l`
@@ -32,12 +38,8 @@ fi
 echo $cmd
 eval $cmd
 
-rm -rf ~/.vim  ~/.vimrc
-git clone digua@58.221.61.136:~/git/vim  ~/.vim
-cd ~/.vim
-git remote add github https://github.com/zkdfbb/vim.git
 
-#首先安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
+#安装最新版的vim，YouCompleteMe要求VIM版本>=7.4, neocomplete要求vim添加lua支持
 cd ~/.vim/scripts
 tar xf vim-7.4.tar.bz2
 cd vim74
