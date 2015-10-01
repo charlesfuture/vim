@@ -1,7 +1,7 @@
 # vim 配置文件
 
 **在其他机器上部署**
-
+```shell
     #部署
     参考script/setup.sh手动部署
 
@@ -10,7 +10,7 @@
     
     #插件说明
     YouComplete和neocomplete都是补全插件,两者使用其一即可,默认启用neocomplete
-
+```
 
 **submodule初始化**
 
